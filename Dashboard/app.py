@@ -17,7 +17,7 @@ df['genre'] = df['genre'].apply(lambda x: [i.strip().lower() for i in x.split(',
 # ----------- FILTER OPTIONS -----------
 all_genres = sorted(set(g for sublist in df['genre'] for g in sublist))
 
-year = st.sidebar.multiselect("Select Year", sorted(df['release_year'].unique()))
+year = st.sidebar.multiselect("Select Year", sorted(df['release_year'].unique(),reverse=True))
 genre = st.sidebar.multiselect("Select Genre", all_genres)
 country = st.sidebar.multiselect("Select Country", df['country'].dropna().unique())
 ctype = st.sidebar.multiselect("Content Type", df['type'].unique())
