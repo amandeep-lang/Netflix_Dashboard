@@ -6,19 +6,14 @@ import plotly.express as px
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 
 # Load dataset
-df = pd.read_csv("Dashboard/netflix_cleaned_final.csv")
+df = pd.read_csv("netflix_cleaned_final.csv")
 
 st.title("🎬 Netflix Content Strategy Dashboard")
 st.markdown("Analyze Netflix content trends, genres, and global distribution")
 
-# ----------- CLEAN GENRE COLUMN -----------
-df['genre'] = df['genre'].apply(lambda x: [i.strip().lower() for i in x.split(',')])
-
-# ----------- FILTER OPTIONS -----------
-all_genres = sorted(set(g for sublist in df['genre'] for g in sublist))
 
 year = st.sidebar.multiselect("Select Year", sorted(df['release_year'].unique(),reverse=True))
-genre = st.sidebar.multiselect("Select Genre", all_genres)
+genre = st.sidebar.multiselect("Select Genre", df["primary_genre"])
 country = st.sidebar.multiselect("Select Country", df['country'].dropna().unique())
 ctype = st.sidebar.multiselect("Content Type", df['type'].unique())
 
@@ -64,7 +59,12 @@ st.markdown("---")
 colA, colB = st.columns(2)
 
 with colA:
-    fig1 = px.pie(filtered_df, names='type', title="Content Type Distribution")
+    fig1 = px.pie(
+        filtered_df,
+        names='type',
+        title="Content Type Distribution",
+        hole=0.5   # 🔥 makes it donut
+    )
     st.plotly_chart(fig1, use_container_width=True)
 
 with colB:
@@ -175,3 +175,44 @@ fig_orig = px.pie(original_dist, names='is_original', values='count',
                   title="Original vs Licensed")
 
 st.plotly_chart(fig_orig, use_container_width=True)
+
+
+
+# ----------- MOVIE VS TV SHOW TREND -----------
+st.subheader("🎥 Movies vs TV Shows Trend")
+
+type_trend = filtered_df.groupby(['release_year','type']).size().reset_index(name='count')
+
+fig_type = px.line(type_trend, x='release_year', y='count',
+                   color='type', markers=True,
+                   title="Movies vs TV Shows Over Time")
+
+st.plotly_chart(fig_type, use_container_width=True)
+
+# ----------- TOP GENRES OVERALL -----------
+st.subheader("🎭 Top Genres Overall")
+
+top_genre = df_exploded['genre'].value_counts().head(10).reset_index()
+top_genre.columns = ['genre','count']
+
+fig_genre = px.bar(top_genre, x='genre', y='count',
+                  title="Top 10 Genres on Netflix")
+
+st.plotly_chart(fig_genre, use_container_width=True)
+
+st.markdown("---")
+st.header("📌 Key Insights on Netflix Global Strategy")
+
+st.write("""
+1. Netflix has significantly increased content production after 2015, indicating aggressive global expansion.
+
+2. A major shift towards original content is observed in recent years, reducing dependency on licensed content.
+
+3. Content is heavily concentrated in a few countries, showing strategic partnerships and regional dominance.
+
+4. Drama, International, and TV Shows dominate the platform, highlighting focus on global and diverse audiences.
+
+5. Growth in TV Shows suggests a shift toward long-term viewer engagement rather than one-time movie consumption.
+
+6. Netflix targets multiple audience segments through diverse rating categories (TV-MA, PG, etc.).
+""")
