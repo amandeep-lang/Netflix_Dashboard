@@ -6,7 +6,7 @@ import plotly.express as px
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 
 # Load dataset
-df = pd.read_csv("Dashboard/netflix_cleaned_final.csv")
+df = pd.read_csv("netflix_cleaned_final.csv")
 
 st.title("🎬 Netflix Content Strategy Dashboard")
 st.markdown("Analyze Netflix content trends, genres, and global distribution")
@@ -68,10 +68,20 @@ with colA:
     st.plotly_chart(fig1, use_container_width=True)
 
 with colB:
-    fig4 = px.histogram(filtered_df, x='rating', title="Rating Distribution")
-    st.plotly_chart(fig4, use_container_width=True)
+    rating_count = filtered_df['rating'].value_counts().reset_index()
+    rating_count.columns = ['rating', 'count']
 
-st.markdown("---")
+    # Sort properly (descending OR custom order)
+    rating_count = rating_count.sort_values(by='count', ascending=False)
+
+    fig4 = px.bar(
+        rating_count,
+        x='rating',
+        y='count',
+        title="Rating Distribution (Sorted)"
+    )
+
+    st.plotly_chart(fig4, use_container_width=True)
 
 # ----------- TOP GENRES PER YEAR -----------
 st.subheader("🎭 Top Genres per Year")
