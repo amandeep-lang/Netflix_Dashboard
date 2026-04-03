@@ -3,15 +3,17 @@ import pandas as pd
 import plotly.express as px
 import pickle
 
-model = pickle.load(open('Dashboard/le_genre.pkl', 'rb'))
+model = pickle.load(open('Dashboard/model.pkl', 'rb'))
 le_rating = pickle.load(open('Dashboard/le_rating.pkl', 'rb'))
 le_genre = pickle.load(open('Dashboard/le_genre.pkl', 'rb'))
+
+
 
 # ----------- PAGE CONFIG -----------
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 
 # Load dataset
-df = pd.read_csv("Dashboard/netflix_cleaned_final.csv")
+df = pd.read_csv("netflix_cleaned_final.csv")
 
 st.title("🎬 Netflix Content Strategy Dashboard")
 st.markdown("Analyze Netflix content trends, genres, and global distribution")
@@ -231,6 +233,9 @@ st.write("""
 
 6. Netflix targets multiple audience segments through diverse rating categories (TV-MA, PG, etc.).
 """)
+
+
+
 
 st.markdown("---")
 st.header("🤖 Predict Content Type")
