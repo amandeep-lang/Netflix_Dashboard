@@ -3,9 +3,9 @@ import pandas as pd
 import plotly.express as px
 import pickle
 
-model = pickle.load(open('model.pkl', 'rb'))
-le_rating = pickle.load(open('le_rating.pkl', 'rb'))
-le_genre = pickle.load(open('le_genre.pkl', 'rb'))
+model = pickle.load(open('Dashboard/le_genre.pkl', 'rb'))
+le_rating = pickle.load(open('Dashboard/le_rating.pkl', 'rb'))
+le_genre = pickle.load(open('Dashboard/le_genre.pkl', 'rb'))
 
 # ----------- PAGE CONFIG -----------
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
