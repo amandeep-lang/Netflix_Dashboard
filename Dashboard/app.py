@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import plotly.express as px\
+import pickle
+
+model = pickle.load(open('model.pkl', 'rb'))
+le_rating = pickle.load(open('le_rating.pkl', 'rb'))
+le_genre = pickle.load(open('le_genre.pkl', 'rb'))
 
 # ----------- PAGE CONFIG -----------
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
