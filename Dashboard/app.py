@@ -13,7 +13,7 @@ le_genre = pickle.load(open('Dashboard/le_genre.pkl', 'rb'))
 st.set_page_config(page_title="Netflix Dashboard", layout="wide")
 
 # Load dataset
-df = pd.read_csv("netflix_cleaned_final.csv")
+df = pd.read_csv("Dashboard/netflix_cleaned_final.csv")
 
 st.title("🎬 Netflix Content Strategy Dashboard")
 st.markdown("Analyze Netflix content trends, genres, and global distribution")
