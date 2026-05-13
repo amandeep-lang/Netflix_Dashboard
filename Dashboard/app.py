@@ -58,7 +58,38 @@ col1.metric("Total Titles", total_titles)
 col2.metric("Movies", total_movies)
 col3.metric("TV Shows", total_shows)
 
-st.markdown(f"🌍 **Countries Covered:** {total_countries}")
+st.header("🤖 Predict Content Type")
+
+# User Inputs
+duration_input = st.number_input("Enter Duration (minutes/seasons)", min_value=1, value=90)
+
+rating_input = st.selectbox("Select Rating", df['rating'].unique())
+
+genre_input = st.selectbox("Select Genre", df['primary_genre'].unique())
+
+# Predict Button
+if st.button("Predict"):
+
+    try:
+        rating_enc = le_rating.transform([rating_input])[0]
+        genre_enc = le_genre.transform([genre_input])[0]
+
+        input_df = pd.DataFrame({
+            'duration_num': [duration_input],
+            'rating_encoded': [rating_enc],
+            'genre_encoded': [genre_enc]
+        })
+
+        prediction = model.predict(input_df)[0]
+
+        if prediction == 0:
+            st.success("🎬 This content is likely a MOVIE")
+        else:
+            st.success("📺 This content is likely a TV SHOW")
+
+    except Exception as e:
+        st.error(f"Error: {e}")
+
 
 st.markdown("---")
 
@@ -238,34 +269,3 @@ st.write("""
 
 
 st.markdown("---")
-st.header("🤖 Predict Content Type")
-
-# User Inputs
-duration_input = st.number_input("Enter Duration (minutes/seasons)", min_value=1, value=90)
-
-rating_input = st.selectbox("Select Rating", df['rating'].unique())
-
-genre_input = st.selectbox("Select Genre", df['primary_genre'].unique())
-
-# Predict Button
-if st.button("Predict"):
-
-    try:
-        rating_enc = le_rating.transform([rating_input])[0]
-        genre_enc = le_genre.transform([genre_input])[0]
-
-        input_df = pd.DataFrame({
-            'duration_num': [duration_input],
-            'rating_encoded': [rating_enc],
-            'genre_encoded': [genre_enc]
-        })
-
-        prediction = model.predict(input_df)[0]
-
-        if prediction == 0:
-            st.success("🎬 This content is likely a MOVIE")
-        else:
-            st.success("📺 This content is likely a TV SHOW")
-
-    except Exception as e:
-        st.error(f"Error: {e}")
